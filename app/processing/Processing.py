@@ -115,39 +115,42 @@ class Processing(object):
 
 	# Method draws a rectangle according to the given x, y, and width
     def ellipse(self, x : int, y : int, width : int, height: int) -> None:
+        x = x - width / 2
+        y = y - height / 2
         rectangle = (x, y, width, height)
+        
+        if width > self.strokeweight * 2 and height > self.strokeweight * 2:
+            # Fill and Stroke
+            if self.boolFill and self.boolStroke:
+                # Stroke
+                stroke_rectangle = (x - self.strokeweight, \
+                                    y - self.strokeweight, \
+                                    width + self.strokeweight * 2, \
+                                    height + self.strokeweight * 2)
+                pygame.draw.ellipse(self.screen, \
+                                   self.strokecolour, \
+                                   stroke_rectangle, \
+                                   fill)
+                
+                # Fill
+                pygame.draw.ellipse(self.screen, \
+                                   self.fillcolour, \
+                                   rectangle, \
+                                   fill)            
 
-        # Fill and Stroke
-        if self.boolFill and self.boolStroke:
-            # Stroke
-            stroke_rectangle = (x - self.strokeweight, \
-                                y - self.strokeweight, \
-                                width + self.strokeweight * 2, \
-                                height + self.strokeweight * 2)
-            pygame.draw.ellipse(self.screen, \
-                               self.strokecolour, \
-                               stroke_rectangle, \
-                               fill)
-            
-            # Fill
-            pygame.draw.ellipse(self.screen, \
-                               self.fillcolour, \
-                               rectangle, \
-                               fill)            
+            # Fill, no Stroke
+            elif self.boolFill and not self.boolStroke:
+                pygame.draw.ellipse(self.screen, \
+                                   self.fillcolour, \
+                                   rectangle, \
+                                   fill)
 
-        # Fill, no Stroke
-        elif self.boolFill and not self.boolStroke:
-            pygame.draw.ellipse(self.screen, \
-                               self.fillcolour, \
-                               rectangle, \
-                               fill)
+            # Stroke, no Fill
+            elif not self.boolFill and self.boolStroke:
+                pygame.draw.ellipse(self.screen, \
+                                    self.strokecolour, \
+                                    rectangle, \
+                                    self.strokeweight)
 
-        # Stroke, no Fill
-        elif not self.boolFill and self.boolStroke:
-            pygame.draw.ellipse(self.screen, \
-                                self.strokecolour, \
-                                rectangle, \
-                                self.strokeweight)
-
-        # no Stroke, no Fill does nothing
+            # no Stroke, no Fill does nothing
         
